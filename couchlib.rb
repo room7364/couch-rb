@@ -1,15 +1,18 @@
 module Couch
+  class BadResponse < Exception
+  end
   require 'net/http'
   require 'json'
   Host = '127.0.0.1:5984'
   Login = 'admin'
   Password = 'c'
-  def self.create(db)
-    uri = URI("http://#{Host}/#{db}")
+  def self.create(db_name)
+    uri = URI("http://#{Host}/#{db_name}")
     Net::HTTP.start(uri.host, uri.port) do |http|
       request = Net::HTTP::Put.new uri
       request.basic_auth Login, Password
-      http.request request
+      response = http.request request
+      raise BadResponse, response.body if not JSON.parse(response.body)["ok"]
     end
   end
   def self.delete(db)
