@@ -6,7 +6,7 @@ module Couch
   Host = '127.0.0.1:5984'
   Login = 'admin'
   Password = 'c'
-  def self.create(db_name)
+  def self.add(db_name)
     uri = URI("http://#{Host}/#{db_name}")
     Net::HTTP.start(uri.host, uri.port) do |http|
       request = Net::HTTP::Put.new uri
