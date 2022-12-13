@@ -20,7 +20,8 @@ module Couch
     Net::HTTP.start(uri.host, uri.port) do |http|
       request = Net::HTTP::Delete.new uri
       request.basic_auth Login, Password
-      http.request request
+      response = http.request request
+      raise BadResponse, response.body if not JSON.parse(response.body)["ok"]
     end
   end
   def self.list
