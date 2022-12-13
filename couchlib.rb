@@ -1,5 +1,6 @@
 module Couch
   require 'net/http'
+  require 'json'
   Host = '127.0.0.1:5984'
   Login = 'admin'
   Password = 'c'
@@ -26,6 +27,15 @@ module Couch
       request.basic_auth Login, Password
       response = http.request request
       return eval(response.body)
+    end
+  end
+  def self.uuid
+    uri = URI("http://#{Host}/_uuids")
+    Net::HTTP.start(uri.host, uri.port) do |http|
+      request = Net::HTTP::Get.new uri
+      request.basic_auth Login, Password
+      response = http.request request
+      return JSON.parse(response.body)["uuids"][0]
     end
   end
 end
