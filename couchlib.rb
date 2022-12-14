@@ -3,9 +3,12 @@ module Couch
   end
   require 'net/http'
   require 'json'
-  Host = '127.0.0.1:5984'
-  Login = 'admin'
-  Password = 'c'
+  config_file = File.open "./config.json"
+  config = JSON.load config
+  config_file.close
+  Host = "#{config["host"]}:5984"
+  Login = config["login"]
+  Password = config["password"]
   def self.add(db_name)
     uri = URI("http://#{Host}/#{db_name}")
     Net::HTTP.start(uri.host, uri.port) do |http|
@@ -15,8 +18,8 @@ module Couch
       raise BadResponse, response.body if not JSON.parse(response.body)["ok"]
     end
   end
-  def self.delete(db)
-    uri = URI("http://#{Host}/#{db}")
+  def self.delete(db_naem)
+    uri = URI("http://#{Host}/#{db_name}")
     Net::HTTP.start(uri.host, uri.port) do |http|
       request = Net::HTTP::Delete.new uri
       request.basic_auth Login, Password
