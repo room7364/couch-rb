@@ -4,9 +4,9 @@ module Couch
   require 'net/http'
   require 'json'
   config_file = File.open "./config.json"
-  config = JSON.load config
+  config = JSON.load config_file
   config_file.close
-  Host = "#{config["host"]}:5984"
+  Host = "#{config['host']}:5984"
   Login = config["login"]
   Password = config["password"]
   def self.add(db_name)
